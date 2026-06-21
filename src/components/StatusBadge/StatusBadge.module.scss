@@ -1,0 +1,28 @@
+@use "@/styles/variables" as *;
+
+.badge {
+	display: inline-flex;
+	align-items: center;
+	border-radius: 999px;
+	padding: 6px 10px;
+	color: #fff;
+	font-size: 0.8rem;
+	font-weight: 600;
+	letter-spacing: 1px;
+}
+
+.low {
+	background: $color-low;
+}
+
+.normal {
+	background: $color-normal;
+}
+
+.high {
+	background: $color-high;
+}
+
+.veryHigh {
+	background: $color-very-high;
+}
