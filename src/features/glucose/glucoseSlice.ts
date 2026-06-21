@@ -24,6 +24,15 @@ const glucoseSlice = createSlice({
 		addReading: (state, action: PayloadAction<GlucoseReading>) => {
 			state.readings.push(action.payload);
 		},
+		updateReading: (state, action: PayloadAction<GlucoseReading>) => {
+			const index = state.readings.findIndex(
+				(reading) => reading.id === action.payload.id,
+			);
+
+			if (index >= 0) {
+				state.readings[index] = action.payload;
+			}
+		},
 		removeReading: (state, action: PayloadAction<string>) => {
 			state.readings = state.readings.filter(
 				(reading) => reading.id !== action.payload,
@@ -39,6 +48,7 @@ export const {
 	hydrateGlucoseState,
 	markAsHydrated,
 	addReading,
+	updateReading,
 	removeReading,
 	clearReadings,
 } = glucoseSlice.actions;

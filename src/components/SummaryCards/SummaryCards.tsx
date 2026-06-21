@@ -42,15 +42,15 @@ export function SummaryCards() {
 			</article>
 
 			<article>
-				<span>Maior valor</span>
-				<strong>{highest ? `${highest} mg/dL` : "-"}</strong>
-				<small>Pico registrado</small>
-			</article>
-
-			<article>
 				<span>Menor valor</span>
 				<strong>{lowest ? `${lowest} mg/dL` : "-"}</strong>
 				<small>Menor registro</small>
+			</article>
+
+			<article>
+				<span>Maior valor</span>
+				<strong>{highest ? `${highest} mg/dL` : "-"}</strong>
+				<small>Pico registrado</small>
 			</article>
 		</section>
 	);

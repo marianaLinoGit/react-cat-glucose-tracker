@@ -3,7 +3,7 @@
 import { addReading } from "@/features/glucose/glucoseSlice";
 import { classifyGlucose } from "@/features/glucose/glucoseUtils";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { v4 as uuid } from "uuid";
 import styles from "./GlucoseForm.module.scss";
 
@@ -14,13 +14,39 @@ export function GlucoseForm() {
 	const [value, setValue] = useState("");
 	const [measuredAt, setMeasuredAt] = useState("");
 	const [notes, setNotes] = useState("");
+	const [error, setError] = useState("");
+
+	const [maxDateTime, setMaxDateTime] = useState("");
+
+	useEffect(() => {
+		setMaxDateTime(new Date().toISOString().slice(0, 16));
+	}, []);
+
+	const isFormInvalid = !value || !measuredAt;
 
 	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 
-		const glucoseValue = Number(value);
+		setError("");
 
-		if (!glucoseValue || !measuredAt) return;
+		const glucoseValue = Number(value);
+		const selectedDate = new Date(measuredAt);
+		const now = new Date();
+
+		if (!value || !measuredAt) {
+			setError("Preencha o valor da glicemia e a data da medição.");
+			return;
+		}
+
+		if (glucoseValue <= 0) {
+			setError("Informe um valor de glicemia maior que zero.");
+			return;
+		}
+
+		if (selectedDate > now) {
+			setError("Não é permitido registrar medições em datas futuras.");
+			return;
+		}
 
 		dispatch(
 			addReading({
@@ -42,22 +68,25 @@ export function GlucoseForm() {
 			<h2>Nova medição</h2>
 
 			<label>
-				Valor da glicemia
+				Valor da glicemia *
 				<input
 					type="number"
 					min="1"
 					placeholder="Ex: 140"
 					value={value}
 					onChange={(event) => setValue(event.target.value)}
+					required
 				/>
 			</label>
 
 			<label>
-				Data e horário
+				Data e horário *
 				<input
 					type="datetime-local"
+					max={maxDateTime}
 					value={measuredAt}
 					onChange={(event) => setMeasuredAt(event.target.value)}
+					required
 				/>
 			</label>
 
@@ -70,7 +99,11 @@ export function GlucoseForm() {
 				/>
 			</label>
 
-			<button type="submit">Adicionar medição</button>
+			{error ? <p className={styles.error}>{error}</p> : null}
+
+			<button type="submit" disabled={isFormInvalid}>
+				Adicionar medição
+			</button>
 		</form>
 	);
 }

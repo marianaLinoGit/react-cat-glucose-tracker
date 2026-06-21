@@ -1,13 +1,15 @@
 import { RootState } from "@/store/store";
+import { createSelector } from "@reduxjs/toolkit";
 import { sortReadingsByDate } from "./glucoseUtils";
 
 export const selectGlucoseState = (state: RootState) => state.glucose;
 
 export const selectReadings = (state: RootState) => state.glucose.readings;
 
-export const selectSortedReadings = (state: RootState) => {
-	return sortReadingsByDate(state.glucose.readings);
-};
+export const selectSortedReadings = createSelector(
+	[selectReadings],
+	(readings) => sortReadingsByDate(readings),
+);
 
 export const selectLatestReading = (state: RootState) => {
 	const sortedReadings = sortReadingsByDate(state.glucose.readings);
